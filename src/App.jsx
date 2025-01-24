@@ -41,11 +41,12 @@ function App() {
         <Route path="/" element={<AppLayout />}>
           <Route index element={<Navigate replace to="dashboard" />} />
           <Route path="dashboard" element={<Dashboard />}>
-            <Route path="stocks" element={<Stock />} />
+            <Route index element={<Navigate replace to="crypto" />} />
             <Route
               path="crypto"
               element={<Crypto coin={coin} error={error} />}
             />
+            <Route path="stocks" element={<Stock />} />
           </Route>
         </Route>
       </Routes>
