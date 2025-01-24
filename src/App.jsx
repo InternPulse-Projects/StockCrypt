@@ -1,35 +1,53 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route, Navigate } from "react-router";
+import { useEffect, useState } from "react";
+import AppLayout from "./Pages/AppLayout";
+import Dashboard from "./Pages/Dashboard";
+import Stock from "./Components/DashboardContent/Stock";
+import Crypto from "./Components/DashboardContent/Crypto";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [coin, setCoin] = useState([]);
+  const [error, setError] = useState("");
+  const [currency, setCurrency] = useState({
+    name: "usd",
+    symbol: "$",
+  });
+  useEffect(() => {
+    const fetchCrypto = async () => {
+      const options = {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          "x-cg-demo-api-key": "CG-3iAE1KJ7NiWNaUz3bNkHff6G",
+        },
+      };
 
+      fetch(
+        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency.name}`,
+        options
+      )
+        .then((res) => res.json())
+        .then((res) => setCoin(res))
+        .catch(() => setError("Something went wrong"));
+    };
+    fetchCrypto();
+  }, [currency.name]);
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<AppLayout />}>
+          <Route index element={<Navigate replace to="dashboard" />} />
+          <Route path="dashboard" element={<Dashboard />}>
+            <Route path="stocks" element={<Stock />} />
+            <Route
+              path="crypto"
+              element={<Crypto coin={coin} error={error} />}
+            />
+          </Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
