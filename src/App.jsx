@@ -12,13 +12,15 @@ function App() {
     name: "usd",
     symbol: "$",
   });
+
+  const apikey = import.meta.env.VITE_API_KEY;
   useEffect(() => {
     const fetchCrypto = async () => {
       const options = {
         method: "GET",
         headers: {
           accept: "application/json",
-          "x-cg-demo-api-key": "CG-3iAE1KJ7NiWNaUz3bNkHff6G",
+          "x-cg-demo-api-key": `${apikey}`,
         },
       };
 
@@ -31,7 +33,8 @@ function App() {
         .catch(() => setError("Something went wrong"));
     };
     fetchCrypto();
-  }, [currency.name]);
+  }, [currency.name, apikey]);
+
   return (
     <BrowserRouter>
       <Routes>
