@@ -5,3 +5,5 @@ export const cryptoHeaders = [
   "Market Cap 24h",
   "Volume",
 ];
+
+export const stockHeaders = ["Low", "High", "Open", "Close", "Date"];

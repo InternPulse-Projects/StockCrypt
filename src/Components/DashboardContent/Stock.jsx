@@ -1,41 +1,43 @@
-import { Card } from "@tremor/react";
-import Chart from "../Chart";
+import { useState } from "react";
 import { TableHero } from "../Table";
+import { Card } from "@tremor/react";
+import { stockHeaders } from "../tableData";
+import Chart from "../Chart";
+import propTypes from "prop-types";
+import Pagination from "../Pagination";
 
-function Stock() {
-  const stockData = [
-    {
-      date: "Jan 23",
-      "Route Requests": 289,
-    },
-    {
-      date: "Feb 23",
-      "Route Requests": 283,
-    },
-    {
-      date: "Mar 5",
-      "Route Requests": 100,
-    },
-    {
-      date: "May 15",
-      "Route Requests": 120,
-    },
-    {
-      date: "July 2",
-      "Route Requests": 80,
-    },
-  ];
+function Stock({ stock, isLoading, error }) {
+  const [page, setPage] = useState(1);
+  const sym = stock.meta?.symbol;
+
+  const limit = 5;
+  const endIndex = page * limit;
+  const startIndex = endIndex - limit;
+  const records = stock.values?.slice(startIndex, endIndex);
+  const numPage = Math.ceil(stock.values?.length / limit);
+
+  if (isLoading) return <p>Loading...</p>;
+
   return (
     <div className="space-y-4">
       <Card className="mt-4">
-        <Chart data={stockData} color="rose" />
+        <h1 className="text-tremor-title font-sans font-semibold">{sym}</h1>
+        {error && <span>{error}</span>}
+        {!error && <Chart stockData={stock} color={["blue", "rose"]} />}
       </Card>
-      <div className="w-fill py-2 text-sm font-semibold border-b">Tabs</div>
-      {/* <TableHero /> */}
+      <div className="w-fill py-2 text-sm font-semibold border-b">
+        Information
+      </div>
+      <TableHero headers={stockHeaders} data={records} error={error} />
+      <Pagination page={page} setPage={setPage} numPage={numPage} />
     </div>
   );
 }
 
-export default Stock;
+Stock.propTypes = {
+  stock: propTypes.object.isRequired,
+  isLoading: propTypes.bool.isRequired,
+  error: propTypes.string,
+};
 
-// SFTCJ0W2FDVD648H.
+export default Stock;

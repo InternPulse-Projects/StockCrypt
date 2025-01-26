@@ -7,9 +7,12 @@ import {
   TableRow,
 } from "@tremor/react";
 import propTypes from "prop-types";
+import { useLocation } from "react-router";
 
 export const TableHero = ({ headers, data, error }) => {
-  console.log(error);
+  const location = useLocation();
+
+  const currLocation = location.pathname.includes("crypto");
   return (
     <div className="w-full mx-auto">
       {error && (
@@ -25,21 +28,34 @@ export const TableHero = ({ headers, data, error }) => {
             ))}
           </TableRow>
         </TableHead>
-
-        <TableBody>
-          {data?.map((d) => (
-            <TableRow key={d.id} className="text-tremor-default">
-              <TableCell className="flex flex-row gap-x-3 items-center">
-                <img src={d.image} alt={d.name} width={25} />
-                {d.name}
-              </TableCell>
-              <TableCell>{d.price_change_24h}</TableCell>
-              <TableCell>{d.market_cap}</TableCell>
-              <TableCell>{d.market_cap_change_24h}</TableCell>
-              <TableCell>{d.total_volume}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
+        {currLocation ? (
+          <TableBody>
+            {data?.map((d) => (
+              <TableRow key={d.id} className="text-tremor-default">
+                <TableCell className="flex flex-row gap-x-3 items-center">
+                  <img src={d.image} alt={d.name} width={25} />
+                  {d.name}
+                </TableCell>
+                <TableCell>{d.price_change_24h}</TableCell>
+                <TableCell>{d.market_cap}</TableCell>
+                <TableCell>{d.market_cap_change_24h}</TableCell>
+                <TableCell>{d.total_volume}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        ) : (
+          <TableBody>
+            {data?.map((d, index) => (
+              <TableRow key={index} className="text-tremor-default">
+                <TableCell>{d.low}</TableCell>
+                <TableCell>{d.high}</TableCell>
+                <TableCell>{d.open}</TableCell>
+                <TableCell>{d.close}</TableCell>
+                <TableCell>{d.datetime}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        )}
       </Table>
     </div>
   );
