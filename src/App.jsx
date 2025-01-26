@@ -74,7 +74,6 @@ function App() {
 
           const data = await res.json();
 
-          console.log(data);
           if (data.status === "error") return setStockError(data.status);
 
           setStock(data);

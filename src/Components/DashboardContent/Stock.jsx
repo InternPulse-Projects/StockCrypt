@@ -16,8 +16,6 @@ function Stock({ stock, isLoading, error }) {
   const records = stock.values?.slice(startIndex, endIndex);
   const numPage = Math.ceil(stock.values?.length / limit);
 
-  console.log(error);
-
   if (isLoading)
     return <p className="text-tremor-default py-8 border">Loading...</p>;
 
