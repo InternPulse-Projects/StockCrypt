@@ -73,6 +73,8 @@ function App() {
             throw new Error("Something went wrong while fetching data");
 
           const data = await res.json();
+
+          console.log(data);
           if (data.status === "error") return setStockError(data.status);
 
           setStock(data);
@@ -107,17 +109,17 @@ function App() {
               />
             }
           >
-            <Route index element={<Navigate replace to="crypto" />} />
-            <Route
-              path="crypto"
-              element={
-                <Crypto coin={coin} isLoading={isLoading} error={coinError} />
-              }
-            />
+            <Route index element={<Navigate replace to="stocks" />} />
             <Route
               path="stocks"
               element={
                 <Stock stock={stock} isLoading={isLoading} error={stockError} />
+              }
+            />
+            <Route
+              path="crypto"
+              element={
+                <Crypto coin={coin} isLoading={isLoading} error={coinError} />
               }
             />
           </Route>
